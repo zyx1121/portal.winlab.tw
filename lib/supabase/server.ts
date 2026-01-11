@@ -14,10 +14,21 @@ export const createClient = async () => {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        } catch {}
+          cookiesToSet.forEach(({ name, value, options }) => {
+            const cookieOptions: any = { ...options };
+
+            if (process.env.NODE_ENV === "production") {
+              cookieOptions.domain = ".winlab.tw";
+            }
+
+            cookieOptions.sameSite = "lax";
+            cookieOptions.secure = process.env.NODE_ENV === "production";
+
+            cookieStore.set(name, value, cookieOptions);
+          });
+        } catch (error) {
+          console.error("Error setting cookie:", error);
+        }
       },
     },
   });

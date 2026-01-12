@@ -4,25 +4,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
       setLoading(false);
-    };
-
-    getUser();
+    });
 
     const {
       data: { subscription },
@@ -44,17 +37,8 @@ export function Header() {
     });
   };
 
-  const getInitials = (email?: string) => {
-    if (!email) return "?";
-    const parts = email.split("@");
-    if (parts[0]) {
-      return parts[0].charAt(0).toUpperCase();
-    }
-    return "?";
-  };
-
   return (
-    <header className="flex items-center justify-between p-3 px-5 w-full max-w-3xl mx-auto">
+    <header className="flex items-center justify-between p-4 px-6 w-full max-w-4xl mx-auto">
       <Link href="/">
         <h1 className="text-lg font-bold hover:scale-105 transition-transform duration-200">
           Winlab Portal

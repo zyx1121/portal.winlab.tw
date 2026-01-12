@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
-
 import "@/app/globals.css";
 import { Background } from "@/components/background";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { MouseTracker } from "@/components/mouse-tracker";
 import { Separator } from "@/components/ui/separator";
+import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import { Geist_Mono } from "next/font/google";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -16,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Portal | Winlab",
-  description: "a collection of portals for NYCU Winlab",
+  description: "A collection of portals for NYCU Winlab",
 };
 
 export default function RootLayout({

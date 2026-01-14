@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-4 p-4 max-w-4xl mx-auto">
+    <div className="flex flex-col gap-4 p-4 max-w-5xl mx-auto">
       {PORTALS.map((portal) => (
         <Link href={portal.href} key={portal.name} target="_blank">
           <Item

@@ -47,7 +47,6 @@ function HomeContent() {
   const serviceName = searchParams.get("service");
   const [loadedServices, setLoadedServices] = useState<Set<string>>(new Set());
   const iframeRefs = useRef<Map<string, HTMLIFrameElement>>(new Map());
-  const dynamicIframeRefs = useRef<Map<string, HTMLIFrameElement>>(new Map());
   const supabase = createClient();
 
   // Auto login if not authenticated
@@ -112,18 +111,8 @@ function HomeContent() {
           </div>
         </div>
         {PORTALS.filter((portal) => !portal.isCommon).map((portal) => {
-          // Extract service name from URL for internal services
-          const portalServiceName = getServiceName(portal.href);
-          const isWinlabService = portalServiceName !== null;
-
           return (
-            <Link
-              href={
-                isWinlabService ? `/?service=${portalServiceName}` : portal.href
-              }
-              key={portal.name}
-              target={isWinlabService ? undefined : "_blank"}
-            >
+            <Link href={portal.href} key={portal.name} target="_blank">
               <Item
                 key={portal.name}
                 variant="outline"
@@ -161,9 +150,12 @@ function HomeContent() {
       </div>
 
       {/* Iframe layer - always rendered, shown/hidden based on service */}
+      {/* Only show iframe for common services */}
       <div
         className={`fixed inset-0 top-0 bottom-[calc(4rem+1px)] transition-opacity duration-300 ${
-          serviceName && serviceName !== "portal"
+          serviceName &&
+          serviceName !== "portal" &&
+          COMMON_SERVICES.includes(serviceName)
             ? "opacity-100 pointer-events-auto z-10"
             : "opacity-0 pointer-events-none z-0"
         }`}
@@ -195,25 +187,6 @@ function HomeContent() {
             </div>
           );
         })}
-
-        {/* Dynamic service iframes (non-common services) */}
-        {serviceName &&
-          !COMMON_SERVICES.includes(serviceName) &&
-          serviceName !== "portal" && (
-            <div className="absolute inset-0 w-full h-full z-10">
-              <iframe
-                ref={(el) => {
-                  if (el) dynamicIframeRefs.current.set(serviceName, el);
-                }}
-                src={`https://${serviceName}.winlab.tw`}
-                className="w-full h-full border-0 bg-transparent"
-                title={serviceName}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onLoad={() => handleLoad(serviceName)}
-              />
-            </div>
-          )}
       </div>
     </>
   );

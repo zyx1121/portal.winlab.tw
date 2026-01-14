@@ -10,8 +10,8 @@ export default async function ProfilePage() {
   } = await supabase.auth.getUser();
 
   return (
-    <div className="flex flex-col gap-3 p-3 max-w-3xl mx-auto">
-      <div className="flex flex-col items-center gap-6 p-6 bg-background/50 backdrop-blur-lg rounded-lg border">
+    <div className="flex flex-col gap-4 p-4 max-w-4xl mx-auto">
+      <div className="flex flex-col items-center gap-4 p-4 bg-background/70 backdrop-blur-lg rounded-lg border">
         <Avatar className="size-24">
           {user?.user_metadata?.avatar_url ? (
             <AvatarImage

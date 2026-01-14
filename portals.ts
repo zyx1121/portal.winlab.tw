@@ -12,6 +12,12 @@ export const PORTALS = [
     icon: "/reimburse.png",
   },
   {
+    name: "Approve",
+    tags: ["簽核"],
+    href: "https://approve.winlab.tw",
+    icon: "/approve.png",
+  },
+  {
     name: "Nextcloud",
     tags: ["儲存", "Winfra"],
     href: "https://nextcloud.winfra.cs.nycu.edu.tw",

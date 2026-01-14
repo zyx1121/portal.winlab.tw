@@ -14,11 +14,11 @@ import {
 import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { PORTALS } from "@/portals";
-import { SquareArrowOutUpRight } from "lucide-react";
+import { Loader2, SquareArrowOutUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 // Extract common services from PORTALS
 const getServiceName = (href: string) => {
@@ -41,7 +41,7 @@ const COMMON_SERVICES = PORTALS.filter((p) => p.isCommon)
   .map((p) => getServiceName(p.href))
   .filter((name): name is string => name !== null);
 
-export default function Home() {
+function HomeContent() {
   const { user, loading } = useAuth();
   const searchParams = useSearchParams();
   const serviceName = searchParams.get("service");
@@ -216,5 +216,19 @@ export default function Home() {
           )}
       </div>
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-dvh">
+          <Loader2 className="size-4 animate-spin" />
+        </div>
+      }
+    >
+      <HomeContent />
+    </Suspense>
   );
 }

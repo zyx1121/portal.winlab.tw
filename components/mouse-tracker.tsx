@@ -1,7 +1,8 @@
 "use client";
 
+import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import type { RealtimeChannel, User } from "@supabase/supabase-js";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";
 
 interface MousePosition {
@@ -22,32 +23,13 @@ interface CursorData {
 }
 
 export function MouseTracker() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
   const [cursors, setCursors] = useState<Map<string, CursorData>>(new Map());
   const channelRef = useRef<RealtimeChannel | null>(null);
   const supabase = createClient();
   const lastSentRef = useRef<number>(0);
   const throttleMs = 50;
   const cleanupTimeoutsRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-
-    getUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase]);
 
   useEffect(() => {
     if (!user) {

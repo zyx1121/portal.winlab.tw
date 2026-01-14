@@ -1,13 +1,23 @@
+"use client";
+
 import { LogoutButton } from "@/components/logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createClient } from "@/lib/supabase/server";
+import { useAuth } from "@/contexts/auth-context";
 
-export default async function ProfilePage() {
-  const supabase = await createClient();
+export default function ProfilePage() {
+  const { user, loading } = useAuth();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-4 p-4 max-w-5xl mx-auto">
+        <div className="flex flex-col items-center gap-4 p-4 bg-background/70 backdrop-blur-lg rounded-lg border">
+          <div className="text-center space-y-2">
+            <p className="text-muted-foreground">載入中...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-5xl mx-auto">

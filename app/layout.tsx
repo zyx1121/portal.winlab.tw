@@ -1,8 +1,6 @@
 import "@/app/globals.css";
 import { Background } from "@/components/background";
 import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { MouseTracker } from "@/components/mouse-tracker";
 import { Separator } from "@/components/ui/separator";
 import { AuthProvider } from "@/contexts/auth-context";
 import type { Metadata } from "next";
@@ -34,11 +32,9 @@ export default function RootLayout({
                 <Background />
               </div>
               <div className="relative flex flex-col min-h-dvh">
-                <Header />
-                <Separator />
                 <main className="flex-1">{children}</main>
+                <Separator />
                 <Footer />
-                <MouseTracker />
               </div>
             </div>
           </AuthProvider>

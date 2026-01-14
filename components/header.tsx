@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { clearSupabaseCookies } from "@/lib/clear-cookies";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -8,20 +9,34 @@ import { useEffect, useState } from "react";
 
 export function Header() {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session }, error }) => {
+        if (error) {
+          console.error("Error getting session:", error);
+          // If it's a corrupted session error, clear cookies
+          if (
+            error.message.includes("Invalid") ||
+            error.message.includes("corrupt")
+          ) {
+            console.log("Clearing corrupted cookies...");
+            clearSupabaseCookies();
+          }
+        }
+        setUser(session?.user ?? null);
+      })
+      .catch((error) => {
+        console.error("Failed to get session:", error);
+        setUser(null);
+      });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -68,7 +83,6 @@ export function Header() {
         <button
           onClick={handleLogin}
           className="cursor-pointer transition-all hover:opacity-80 hover:scale-105 duration-200"
-          disabled={loading}
           aria-label="Login"
         >
           <Avatar>

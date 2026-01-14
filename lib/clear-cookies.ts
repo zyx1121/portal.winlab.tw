@@ -18,10 +18,13 @@ export function clearSupabaseCookies() {
     // Clear for current domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 
-    // Clear for shared domain
+    // Clear for shared domain (.winlab.tw)
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.winlab.tw;`;
 
-    // Clear for subdomain
+    // Clear for specific subdomains (portal.winlab.tw)
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=portal.winlab.tw;`;
+
+    // Clear for other subdomains (approve.winlab.tw)
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=approve.winlab.tw;`;
   });
 

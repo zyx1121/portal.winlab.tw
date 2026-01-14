@@ -61,13 +61,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return;
           }
 
-          // If it's a corrupted session error, clear cookies
+          // If it's a corrupted session error or UTF-8 error, clear cookies
           if (
             error.message.includes("Invalid") ||
             error.message.includes("corrupt") ||
-            error.message.includes("malformed")
+            error.message.includes("malformed") ||
+            error.message.includes("UTF-8") ||
+            error.message.includes("utf-8")
           ) {
-            console.log("🧹 Clearing corrupted cookies...");
+            console.log(
+              "🧹 Clearing corrupted cookies (including UTF-8 errors)..."
+            );
             clearSupabaseCookies();
           }
         }
@@ -77,6 +81,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error("Failed to initialize auth:", error);
+
+        // Handle UTF-8 errors by clearing cookies
+        if (
+          error instanceof Error &&
+          (error.message.includes("UTF-8") || error.message.includes("utf-8"))
+        ) {
+          console.log("🧹 Clearing cookies due to UTF-8 error...");
+          clearSupabaseCookies();
+        }
+
         if (mounted) {
           setUser(null);
         }

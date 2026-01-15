@@ -152,11 +152,11 @@ function HomeContent() {
       {/* Iframe layer - always rendered, shown/hidden based on service */}
       {/* Only show iframe for common services */}
       <div
-        className={`fixed inset-0 top-0 bottom-[calc(4rem+1px)] transition-opacity duration-300 ${
+        className={`fixed inset-0 top-0 h-dvh transition-opacity duration-300 ${
           serviceName &&
           serviceName !== "portal" &&
           COMMON_SERVICES.includes(serviceName)
-            ? "opacity-100 pointer-events-auto z-10"
+            ? "opacity-100 pointer-events-auto z-0"
             : "opacity-0 pointer-events-none z-0"
         }`}
       >
